@@ -1,0 +1,11 @@
+numpy<3
+pandas<3
+scikit-learn<2
+librosa>=0.10,<0.12
+soundfile<1
+matplotlib<4
+tqdm<5
+requests<3
+rich<15
+ipykernel<7
+jupyterlab<5

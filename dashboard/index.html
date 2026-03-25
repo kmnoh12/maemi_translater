@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Maemi Dashboard</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <style>
+    :root {
+      --bg: #f6efe2;
+      --card: rgba(255, 251, 245, 0.96);
+      --line: rgba(24, 33, 26, 0.12);
+      --ink: #18211a;
+      --muted: #5c695e;
+      --accent: #24563a;
+      --accent-soft: #dbeedc;
+      --warn: #9b6619;
+      --warn-soft: #f5e8d6;
+      --shadow: 0 14px 36px rgba(24, 33, 26, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      scroll-behavior: smooth;
+    }
+    .page {
+      width: min(1400px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 20px 0 40px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-top: 16px;
+    }
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+    .two {
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+    .three {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .samples {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    h1 {
+      margin: 10px 0;
+      font-size: clamp(34px, 5vw, 56px);
+      line-height: 0.95;
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+    }
+    h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+    .small, .note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .pill {
+      display: inline-flex;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+    .pill.warn {
+      background: var(--warn-soft);
+      color: var(--warn);
+    }
+    .pill.danger {
+      background: #f8d9d9;
+      color: #8a1f1f;
+    }
+    .pill.info {
+      background: #dce9f8;
+      color: #1f4f8a;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,0.72);
+    }
+    .metric-value {
+      font-size: 28px;
+      font-weight: 800;
+    }
+    .metric.metric-gauge {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      align-items: center;
+      gap: 14px;
+    }
+    .gauge {
+      --percent: 0;
+      --gauge-color: #9b6619;
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.98) 0 53%, transparent 54% 100%),
+        conic-gradient(var(--gauge-color) calc(var(--percent) * 1%), rgba(24, 33, 26, 0.08) 0);
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 0 0 1px rgba(24, 33, 26, 0.08);
+    }
+    .gauge-inner {
+      display: grid;
+      place-items: center;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.98);
+      text-align: center;
+      line-height: 1;
+    }
+    .gauge-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .gauge-caption {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .metric-kicker {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .metric-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .detail, .sample-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,0.72);
+    }
+    .sticky-panel {
+      position: sticky;
+      top: 16px;
+      align-self: start;
+      transition: top 180ms ease;
+    }
+    .controls, .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    select, input, button, a {
+      font: inherit;
+    }
+    select, input, button {
+      padding: 10px 12px;
+      border-radius: 12px;
+    }
+    select, input {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+    }
+    button {
+      border: 0;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+    }
+    a.link {
+      display: inline-block;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(36, 86, 58, 0.24);
+      color: var(--accent);
+      text-decoration: none;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th, td {
+      padding: 8px 6px;
+      text-align: left;
+      border-bottom: 1px solid rgba(24, 33, 26, 0.1);
+      vertical-align: top;
+    }
+    audio {
+      width: 100%;
+      margin-top: 10px;
+    }
+    img {
+      max-width: 100%;
+      display: block;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: white;
+      margin: 10px 0;
+    }
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 12px;
+      line-height: 1.45;
+      margin: 0;
+    }
+    .table-wrap {
+      max-height: 560px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+    .table-wrap tbody tr {
+      cursor: pointer;
+    }
+    .table-wrap tbody tr:hover,
+    .table-wrap tbody tr.active {
+      background: rgba(36, 86, 58, 0.08);
+    }
+    .empty {
+      color: var(--muted);
+      padding: 18px;
+      text-align: center;
+    }
+    @media (max-width: 900px) {
+      .page {
+        width: min(100% - 16px, 1400px);
+      }
+      .sticky-panel {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="card">
+      <div class="pill">Work Dashboard</div>
+      <h1 id="title">Loading...</h1>
+      <div id="subtitle" class="note"></div>
+      <div class="metrics" id="top-metrics"></div>
+      <div class="metrics" id="comparison-metrics" style="margin-top:12px"></div>
+    </section>
+
+    <section class="grid two">
+      <article class="card">
+        <h2>수집 현황</h2>
+        <table id="species-table"></table>
+      </article>
+      <article class="card">
+        <h2>학습 상태</h2>
+        <div class="grid two" id="training-panels"></div>
+        <div class="detail" style="margin-top:12px">
+          <h3>주요 혼동</h3>
+          <ul id="confusion-list"></ul>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid two">
+      <article class="card">
+        <h2>대표 샘플</h2>
+        <div class="controls">
+          <select id="species-filter"></select>
+          <select id="region-filter">
+            <option value="all">지역 전체</option>
+            <option value="true">한국 샘플</option>
+            <option value="false">해외 샘플</option>
+          </select>
+          <select id="recommendation-filter">
+            <option value="all">최종 결과 전체</option>
+            <option value="accepted">채택만</option>
+            <option value="low_confidence">보류만</option>
+            <option value="second_stage">2단계 승격만</option>
+          </select>
+          <input id="search-input" type="search" placeholder="sound id / 장소 검색" />
+        </div>
+        <div class="grid samples" id="sample-grid" style="margin-top:12px"></div>
+      </article>
+      <article class="card sticky-panel">
+        <h2>상세 보기</h2>
+        <div id="selected-sample" class="detail"></div>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2>전체 라이브러리</h2>
+      <div class="controls">
+        <select id="library-species-filter"></select>
+        <select id="library-recommendation-filter">
+          <option value="all">최종 결과 전체</option>
+          <option value="accepted">채택만</option>
+          <option value="low_confidence">보류만</option>
+          <option value="second_stage">2단계 승격만</option>
+        </select>
+        <input id="library-search-input" type="search" placeholder="종명 / sound id / 장소 검색" />
+      </div>
+      <div id="library-summary" class="note" style="margin-top:10px"></div>
+      <div class="grid two" style="margin-top:12px">
+        <div class="table-wrap">
+          <table id="library-table"></table>
+        </div>
+        <div id="library-detail" class="detail"></div>
+      </div>
+    </section>
+
+    <section class="grid two">
+      <article class="card">
+        <h2>학습 증거</h2>
+        <ul id="proof-list"></ul>
+      </article>
+      <article class="card">
+        <h2>최근 장기 실행 로그</h2>
+        <div id="log-path" class="note"></div>
+        <pre id="log-preview" style="margin-top:12px"></pre>
+      </article>
+    </section>
+  </div>
+
+  <script src="./data.js"></script>
+  <script>
+    const data = window.DASHBOARD_DATA;
+    const $ = (id) => document.getElementById(id);
+    const relRoot = "../";
+    const speciesNameMap = Object.fromEntries(
+      (data.collection.species_stats || []).map((item) => [item.species_code, item.common_name_ko || item.species_code])
+    );
+
+    let currentSamples = (data.samples || []).slice();
+    let currentRows = (data.collection.library_rows || []).slice();
+    let activeSoundId = null;
+    const libraryPredictionCache = new Map();
+
+    function esc(v) {
+      return String(v ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function n(v) {
+      return Number(v || 0).toLocaleString("ko-KR");
+    }
+
+    function secs(v) {
+      return `${Number(v || 0).toLocaleString("ko-KR", { maximumFractionDigits: 2 })} sec`;
+    }
+
+    function metricColor(percentValue) {
+      const clamped = Math.max(0, Math.min(100, Number(percentValue || 0)));
+      const hue = Math.round(clamped * 1.2);
+      const light = clamped < 60 ? 42 : 36;
+      return `hsl(${hue} 70% ${light}%)`;
+    }
+
+    function percentLabel(value) {
+      return `${(Number(value || 0) * 100).toFixed(1)}%`;
+    }
+
+    function renderGaugeMetric(label, value, note) {
+      const percent = Math.max(0, Math.min(100, Number(value || 0) * 100));
+      const color = metricColor(percent);
+      return `
+        <div class="metric metric-gauge">
+          <div class="gauge" style="--percent:${percent.toFixed(1)}; --gauge-color:${color};">
+            <div class="gauge-inner">
+              <div>
+                <div class="gauge-value">${percent.toFixed(1)}%</div>
+                <div class="gauge-caption">${esc(label)}</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="metric-kicker">${esc(label)}</div>
+            <div class="metric-value">${percentLabel(value)}</div>
+            <div class="metric-note">${esc(note)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPlainMetric(label, value, note) {
+      return `
+        <div class="metric">
+          <div class="small">${esc(label)}</div>
+          <div class="metric-value">${esc(value)}</div>
+          <div class="metric-note">${esc(note)}</div>
+        </div>
+      `;
+    }
+
+    function sampleAudio(s) {
+      return s.preview_audio_path ? `../${s.preview_audio_path}` : `${relRoot}${s.audio_path}`;
+    }
+
+    function rowAudio(r) {
+      return r.preview_audio_path ? `../${r.preview_audio_path}` : `${relRoot}${r.audio_path}`;
+    }
+
+    function speciesLabel(item) {
+      return `${item.common_name_ko || item.species_code} (${item.species_code})`;
+    }
+
+    function getAggregateTop3(item) {
+      if (item.aggregate_ranking) return item.aggregate_ranking.slice(0, 3);
+      if (item.top3) return item.top3.slice(0, 3);
+      return [];
+    }
+
+    function getTopPrediction(item) {
+      if (item.top_prediction) return item.top_prediction;
+      const top3 = getAggregateTop3(item);
+      return top3[0] || null;
+    }
+
+    function getPredictionState(item) {
+      const top3 = getAggregateTop3(item);
+      const top1 = top3[0];
+      const top2 = top3[1];
+      const truth = item.species_code;
+      const predicted = top1?.label || null;
+      const probGap = top1 && top2 ? top1.mean_probability - top2.mean_probability : 1;
+      const voteGap = top1 && top2 ? (top1.vote_count || 0) - (top2.vote_count || 0) : 99;
+      const isMismatch = Boolean(predicted && truth && predicted !== truth);
+      const isLowConfidence = probGap < 0.08 || voteGap <= 2;
+      return { top1, top2, truth, predicted, probGap, voteGap, isMismatch, isLowConfidence };
+    }
+
+    function buildPredictionBadges(item) {
+      const state = getPredictionState(item);
+      const badges = [];
+      if (item.second_stage && item.final_recommendation?.source_model === "focus_species_cnn") {
+        const modelPath = item.second_stage?.model_path || "";
+        badges.push(modelPath.includes("focus_pair_cy")
+          ? '<span class="pill info">참/유 pair 재판정</span>'
+          : '<span class="pill info">2단계 승격</span>');
+      }
+      if (item.risky_accepted_trigger?.triggered) {
+        badges.push('<span class="pill warn">위험 accepted 재검토</span>');
+      }
+      if (state.isMismatch) badges.push('<span class="pill danger">라벨 불일치</span>');
+      if (state.isLowConfidence) badges.push('<span class="pill warn">확신 낮음</span>');
+      if (!state.isMismatch && !state.isLowConfidence) badges.push('<span class="pill info">판정 안정</span>');
+      return badges.join("");
+    }
+
+    function buildPredictionSummary(item) {
+      const state = getPredictionState(item);
+      if (!state.top1) return '<div class="small">예측 정보 없음</div>';
+      const predictedName = speciesNameMap[state.top1.label] || state.top1.label;
+      const truthName = speciesNameMap[state.truth] || state.truth;
+      const recommendation = item.final_recommendation || item.recommendation || {};
+      const recommendationText = recommendation.status === "accepted"
+        ? `권장 결과 <strong>${esc(speciesNameMap[recommendation.display_label] || recommendation.display_label)}</strong>`
+        : recommendation.status === "low_confidence"
+          ? `권장 결과 <strong>보류</strong> / 후보 ${esc((recommendation.candidate_labels || []).map((label) => speciesNameMap[label] || label).join(" / "))}`
+          : "권장 결과 없음";
+      const lines = [
+        `<div class="small">${recommendationText}</div>`,
+        `<div class="small">정답 라벨 <strong>${esc(truthName)}</strong> / 모델 top1 <strong>${esc(predictedName)}</strong></div>`,
+        `<div class="small">top1 prob ${state.top1.mean_probability.toFixed(4)} / top2 gap ${state.probGap.toFixed(4)} / votes gap ${state.voteGap}</div>`
+      ];
+      if (state.isMismatch) {
+        lines.push(`<div class="small" style="color:#8a1f1f">현재 모델이 이 샘플을 <strong>${esc(predictedName)}</strong>로 잘못 기울여 보고 있습니다.</div>`);
+      } else if (state.isLowConfidence) {
+        lines.push('<div class="small" style="color:#9b6619">top1과 top2 차이가 작아서 경계 샘플입니다.</div>');
+      }
+      if (item.second_stage && item.second_stage.recommendation) {
+        const secondStage = item.second_stage.recommendation;
+        const secondLabel = secondStage.display_label ? (speciesNameMap[secondStage.display_label] || secondStage.display_label) : "보류";
+        const modelPath = item.second_stage?.model_path || "";
+        const stageLabel = modelPath.includes("focus_pair_cy") ? "참/유 pair CNN 결과" : "2단계 focus CNN 결과";
+        lines.push(`<div class="small">${stageLabel} <strong>${esc(secondLabel)}</strong></div>`);
+      }
+      if (item.risky_accepted_trigger?.triggered) {
+        lines.push('<div class="small" style="color:#9b6619">accepted였지만 절대확률이 낮고 짧은 파일이라 위험 accepted 재판정을 거쳤습니다.</div>');
+      }
+      return lines.join("");
+    }
+
+    function renderHeader() {
+      $("title").textContent = data.project.title;
+      $("subtitle").textContent = data.project.subtitle;
+      const finalOperating = data.final_operating_rule?.operating_metrics || null;
+      const metricsHtml = [
+        renderPlainMetric("정규화 파일", n(data.collection.inventory_rows), "현재 full baseline에 연결된 원본 수"),
+        renderGaugeMetric("Baseline Accuracy", data.training.accuracy, "full baseline cross-validation"),
+        renderGaugeMetric("Macro F1", data.training.macro_f1, "종별 균형을 본 점수"),
+        finalOperating
+          ? renderGaugeMetric("Operating Accuracy", finalOperating.final_accepted_accuracy, "strict 2단계 accepted 정확도")
+          : renderPlainMetric("예측 캐시", n(data.prediction_cache.cache_size), "대시보드에 미리 계산된 샘플 수"),
+        renderPlainMetric("예측 캐시", n(data.prediction_cache.cache_size), "대시보드에 미리 계산된 샘플 수"),
+      ];
+      $("top-metrics").innerHTML = metricsHtml.join("");
+      const comparisons = data.model_comparison || {};
+      const comparisonOrder = ["baseline", "two_stage_strict", "cnn_6species", "focus_4species"];
+      $("comparison-metrics").innerHTML = comparisonOrder
+        .filter((key) => comparisons[key])
+        .map((key) => {
+          const item = comparisons[key];
+          const note = item.abstain_rate != null
+            ? `${item.note} / abstain ${(Number(item.abstain_rate) * 100).toFixed(1)}%`
+            : item.note;
+          return renderGaugeMetric(item.label, item.accuracy, note);
+        })
+        .join("");
+    }
+
+    function renderSpeciesTable() {
+      $("species-table").innerHTML = `
+        <thead>
+          <tr>
+            <th>종</th>
+            <th>파일 수</th>
+            <th>총 길이</th>
+            <th>한국</th>
+            <th>해외</th>
+            <th>F1</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${(data.collection.species_stats || []).map((row) => `
+            <tr>
+              <td><strong>${esc(row.common_name_ko || row.species_code)}</strong><div class="small">${esc(row.scientific_name || row.species_code)}</div></td>
+              <td>${n(row.file_count)}</td>
+              <td>${secs(row.duration_sec)}</td>
+              <td>${n(row.korea_count)}</td>
+              <td>${n(row.world_only_count)}</td>
+              <td>${row.f1_score}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      `;
+    }
+
+    function renderTrainingPanels() {
+      const strictRows = (data.two_stage_tuning?.rows || []).filter((row) => row.label && row.label.startsWith("strict"));
+      const strictBest = strictRows.length ? strictRows[0] : null;
+      const pairAc = data.confusion_experiments?.pair_ac || null;
+      const pairTy = data.confusion_experiments?.pair_ty || null;
+      $("training-panels").innerHTML = `
+        <div class="detail">
+          <div class="small">특징 버전</div>
+          <div><code>${esc(data.training.feature_version)}</code></div>
+        </div>
+        <div class="detail">
+          <div class="small">윈도우 / 홉</div>
+          <div>${data.training.window_sec}s / ${data.training.hop_sec}s</div>
+        </div>
+        <div class="detail">
+          <div class="small">2단계 strict rule</div>
+          <div>${strictBest ? `prob >= ${strictBest.min_prob}, gap >= ${strictBest.min_gap}, votes >= ${strictBest.min_votes}` : "not loaded"}</div>
+          <div class="small">${strictBest ? `accepted ${(strictBest.accepted_accuracy * 100).toFixed(1)}% / abstain ${(strictBest.abstain_rate * 100).toFixed(1)}% / promotions ${strictBest.promotion_count}` : ""}</div>
+        </div>
+        <div class="detail">
+          <div class="small">세분화 confusion experiments</div>
+          <div class="small">${pairAc ? `${pairAc.label}: acc ${(pairAc.accuracy * 100).toFixed(1)}% / F1 ${(pairAc.macro_f1 * 100).toFixed(1)}%` : ""}</div>
+          <div class="small">${pairTy ? `${pairTy.label}: acc ${(pairTy.accuracy * 100).toFixed(1)}% / F1 ${(pairTy.macro_f1 * 100).toFixed(1)}%` : ""}</div>
+        </div>
+      `;
+      $("confusion-list").innerHTML = (data.training.top_confusions || [])
+        .slice(0, 10)
+        .map((row) => `<li>${esc(row.true)} -> ${esc(row.pred)} (${n(row.count)})</li>`)
+        .join("");
+    }
+
+    function renderProof() {
+      const p = data.training.proof;
+      $("proof-list").innerHTML = `
+        <li>특성 행 수: <strong>${n(p.dataset_summary.num_feature_rows)}</strong></li>
+        <li>교차검증: <code>${esc(p.cross_validation.strategy)}</code></li>
+        <li>폴드 수: <strong>${n(p.cross_validation.num_folds)}</strong></li>
+        <li>모델 파일: <code>${esc(p.artifacts.model.path)}</code></li>
+        <li>모델 해시: <code>${esc(p.artifacts.model.sha256.slice(0,16))}...</code></li>
+        <li>리포트 파일: <code>${esc(p.artifacts.report.path)}</code></li>
+      `;
+    }
+
+    async function renderLog() {
+      $("log-path").textContent = data.ops_queue.latest_log_path || "로그 없음";
+      try {
+        const res = await fetch("/api/latest-log");
+        const payload = await res.json();
+        $("log-preview").textContent = (payload.tail || []).join("\n");
+      } catch (error) {
+        $("log-preview").textContent = `로그를 읽지 못했습니다: ${error.message}`;
+      }
+    }
+
+    function buildSampleCard(s) {
+      const top3 = getAggregateTop3(s).map((x) => `${x.label} ${x.mean_probability.toFixed(3)}`).join(" / ");
+      const top1 = getTopPrediction(s);
+      const img = s.spectrogram_path ? `<img src="../${s.spectrogram_path}" alt="spectrogram" />` : "";
+      return `
+        <div class="sample-card">
+          <div>${String(s.is_korea) === "true" ? '<span class="pill">한국</span>' : '<span class="pill warn">해외</span>'}<span class="pill">${esc(s.species_code)}</span>${buildPredictionBadges(s)}</div>
+          <h3>${esc(s.common_name_ko || s.species_code)}</h3>
+          <div class="small">sound ${esc(s.sound_id)} / obs ${esc(s.observation_id)}</div>
+          <div class="small">${esc(s.license_code)} / ${secs(s.duration_sec)}</div>
+          ${img}
+          <audio controls preload="none" src="${sampleAudio(s)}"></audio>
+          <div class="small">top1 ${esc(top1?.label || "-")} (${top1 ? top1.mean_probability.toFixed(4) : "-"})</div>
+          <div class="small">top3 ${esc(top3)}</div>
+          ${buildPredictionSummary(s)}
+          <div class="actions" style="margin-top:10px">
+            <button type="button" onclick="window.selectSample('${esc(s.sound_id)}')">상세 보기</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSelectedSample(s) {
+      $("selected-sample").innerHTML = `
+        <div>${String(s.is_korea) === "true" ? '<span class="pill">한국 샘플</span>' : '<span class="pill warn">해외 샘플</span>'}${buildPredictionBadges(s)}</div>
+        <h3 style="margin-top:10px">${esc(s.common_name_ko || s.species_code)}</h3>
+        <div class="small">${esc(s.place_guess || "장소 정보 없음")}</div>
+        <div class="detail" style="margin-top:12px">
+          <div class="small">판정 요약</div>
+          ${buildPredictionSummary(s)}
+        </div>
+        <div class="detail" style="margin-top:12px">
+          <div class="small">식별 정보</div>
+          <ul>
+            <li>species code: <code>${esc(s.species_code)}</code></li>
+            <li>sound id: <code>${esc(s.sound_id)}</code></li>
+            <li>observation id: <code>${esc(s.observation_id)}</code></li>
+            <li>license: <code>${esc(s.license_code)}</code></li>
+            <li>duration: ${secs(s.duration_sec)}</li>
+          </ul>
+        </div>
+        <div class="detail" style="margin-top:12px">
+          <div class="small">Top 3 상세</div>
+          <ul>${(s.top3 || []).map((x) => `<li>${esc(x.label)} / prob ${x.mean_probability.toFixed(4)} / votes ${x.vote_count}</li>`).join("")}</ul>
+        </div>
+        ${(s.window_predictions_preview || []).length ? `
+        <div class="detail" style="margin-top:12px">
+          <div class="small">윈도우 예측 미리보기</div>
+          <ul>${s.window_predictions_preview.slice(0, 5).map((w) => `<li>${w.start_sec.toFixed(1)}-${w.end_sec.toFixed(1)}s / ${esc(w.top_label)} / ${w.top_probability.toFixed(4)}</li>`).join("")}</ul>
+        </div>` : ""}
+        <div class="detail" style="margin-top:12px">
+          <div class="small">파일 작업</div>
+          <div class="actions" style="margin-top:10px">
+            <a class="link" target="_blank" rel="noreferrer" href="${relRoot + s.preview_audio_path}">preview mp3</a>
+            <a class="link" target="_blank" rel="noreferrer" href="${relRoot + s.audio_path}">정규화 wav</a>
+            <a class="link" target="_blank" rel="noreferrer" href="${relRoot + s.raw_audio_path}">원본 파일</a>
+          </div>
+        </div>
+      `;
+    }
+
+    function applySampleFilters() {
+      const species = $("species-filter").value;
+      const region = $("region-filter").value;
+      const recommendation = $("recommendation-filter").value;
+      const query = $("search-input").value.trim().toLowerCase();
+      currentSamples = (data.samples || []).filter((s) => {
+        if (species !== "all" && s.species_code !== species) return false;
+        if (region !== "all" && String(s.is_korea) !== region) return false;
+        const finalRecommendation = s.final_recommendation || s.recommendation || {};
+        if (recommendation === "accepted" && finalRecommendation.status !== "accepted") return false;
+        if (recommendation === "low_confidence" && finalRecommendation.status !== "low_confidence") return false;
+        if (recommendation === "second_stage" && finalRecommendation.source_model !== "focus_species_cnn") return false;
+        if (!query) return true;
+        return [s.species_code, s.common_name_ko, s.sound_id, s.place_guess].join(" ").toLowerCase().includes(query);
+      });
+      $("sample-grid").innerHTML = currentSamples.length
+        ? currentSamples.map(buildSampleCard).join("")
+        : `<div class="empty">조건에 맞는 샘플이 없습니다.</div>`;
+      $("selected-sample").innerHTML = currentSamples.length
+        ? ""
+        : `<div class="empty">샘플 없음</div>`;
+      if (currentSamples.length) {
+        renderSelectedSample(currentSamples[0]);
+      }
+    }
+
+    function renderPredictionBlock(p) {
+      return `
+        <div class="detail" style="margin-top:12px">
+          <div class="small">즉석 예측</div>
+          ${buildPredictionSummary(p)}
+          <ul>${(p.aggregate_ranking || []).slice(0,5).map((x) => `<li>${esc(x.label)} / prob ${x.mean_probability.toFixed(4)} / votes ${x.vote_count}</li>`).join("")}</ul>
+          ${(p.window_predictions_preview || []).length ? `<div class="small">window preview: ${(p.window_predictions_preview || []).slice(0, 5).map((w) => `${w.start_sec.toFixed(1)}-${w.end_sec.toFixed(1)}s ${w.top_label}`).join(" / ")}</div>` : ""}
+        </div>
+      `;
+    }
+
+    function renderLibraryDetail(r) {
+      const cached = libraryPredictionCache.get(String(r.sound_id));
+      const sample = (data.samples || []).find((s) => String(s.sound_id) === String(r.sound_id));
+      const img = r.spectrogram_path ? `<img src="../${r.spectrogram_path}" alt="library spectrogram" />` : "";
+      $("library-detail").innerHTML = `
+        <div>${String(r.is_korea) === "true" ? '<span class="pill">한국</span>' : '<span class="pill warn">해외</span>'}<span class="pill">${esc(r.species_code)}</span>${cached ? buildPredictionBadges(cached) : ""}</div>
+        <h3 style="margin-top:10px">${esc(speciesLabel(r))}</h3>
+        <div class="small">${esc(r.place_guess || "장소 정보 없음")}</div>
+        ${img}
+        <audio controls preload="metadata" src="${rowAudio(r)}"></audio>
+        <div class="actions" style="margin-top:10px">
+          <button type="button" onclick="window.predictRow('${esc(r.sound_id)}')">이 파일 다시 예측</button>
+          <a class="link" target="_blank" rel="noreferrer" href="${relRoot + r.audio_path}">정규화 wav</a>
+          <a class="link" target="_blank" rel="noreferrer" href="${relRoot + r.raw_audio_path}">원본 파일</a>
+        </div>
+        <div class="detail" style="margin-top:12px">
+          <ul>
+            <li>scientific name: <code>${esc(r.scientific_name || "-")}</code></li>
+            <li>sound id: <code>${esc(r.sound_id)}</code></li>
+            <li>observation id: <code>${esc(r.observation_id)}</code></li>
+            <li>license: <code>${esc(r.license_code)}</code></li>
+          </ul>
+        </div>
+        ${cached ? renderPredictionBlock(cached) : `<div class="detail" style="margin-top:12px">아직 즉석 예측 전입니다.</div>`}
+        ${sample ? `<div class="detail" style="margin-top:12px"><div class="small">대표 샘플 top3</div><ul>${sample.top3.map((x) => `<li>${esc(x.label)} / prob ${x.mean_probability.toFixed(4)} / votes ${x.vote_count}</li>`).join("")}</ul></div>` : ""}
+      `;
+    }
+
+    function renderLibraryTable() {
+      const visible = currentRows.slice(0, 250);
+      $("library-table").innerHTML = `
+        <thead>
+          <tr>
+            <th>종</th>
+            <th>sound id</th>
+            <th>길이</th>
+            <th>지역</th>
+            <th>장소</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${visible.map((r) => `
+            <tr class="${String(r.sound_id) === String(activeSoundId) ? "active" : ""}" onclick="window.selectRow('${esc(r.sound_id)}')">
+              <td><strong>${esc(r.common_name_ko || r.species_code)}</strong><div class="small">${esc(r.species_code)}</div></td>
+              <td><code>${esc(r.sound_id)}</code></td>
+              <td>${secs(r.duration_sec)}</td>
+              <td>${String(r.is_korea) === "true" ? "한국" : "해외"}</td>
+              <td>${esc(r.place_guess || "-")}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      `;
+
+      if (!currentRows.length) {
+        $("library-detail").innerHTML = `<div class="empty">조건에 맞는 파일이 없습니다.</div>`;
+        return;
+      }
+
+      const selected = currentRows.find((r) => String(r.sound_id) === String(activeSoundId)) || currentRows[0];
+      activeSoundId = selected.sound_id;
+      renderLibraryDetail(selected);
+    }
+
+    function applyLibraryFilters() {
+      const species = $("library-species-filter").value;
+      const recommendation = $("library-recommendation-filter").value;
+      const query = $("library-search-input").value.trim().toLowerCase();
+      currentRows = (data.collection.library_rows || []).filter((r) => {
+        if (species !== "all" && r.species_code !== species) return false;
+        const cached = libraryPredictionCache.get(String(r.sound_id)) || (data.prediction_cache_items || []).find((item) => String(item.sound_id) === String(r.sound_id));
+        const finalRecommendation = cached?.final_recommendation || cached?.recommendation || {};
+        if (recommendation === "accepted" && finalRecommendation.status !== "accepted") return false;
+        if (recommendation === "low_confidence" && finalRecommendation.status !== "low_confidence") return false;
+        if (recommendation === "second_stage" && finalRecommendation.source_model !== "focus_species_cnn") return false;
+        if (!query) return true;
+        return [r.species_code, r.common_name_ko, r.sound_id, r.place_guess].join(" ").toLowerCase().includes(query);
+      });
+      $("library-summary").textContent = `현재 ${n(currentRows.length)}개 파일 표시 중, 테이블은 최대 250개까지 보여줍니다.`;
+      renderLibraryTable();
+    }
+
+    async function runPredictRow(r) {
+      try {
+        const res = await fetch("/api/predict-path", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ audio_path: r.audio_path })
+        });
+        const payload = await res.json();
+        if (!res.ok || payload.error) {
+          throw new Error(payload.error || "prediction failed");
+        }
+        libraryPredictionCache.set(String(r.sound_id), payload);
+        renderLibraryDetail(r);
+      } catch (error) {
+        $("library-detail").insertAdjacentHTML("beforeend", `<div class="detail" style="margin-top:12px">예측 실패: ${esc(error.message)}</div>`);
+      }
+    }
+
+    window.selectSample = function(soundId) {
+      const sample = currentSamples.find((s) => String(s.sound_id) === String(soundId));
+      if (sample) {
+        renderSelectedSample(sample);
+      }
+    };
+
+    window.selectRow = function(soundId) {
+      const row = currentRows.find((r) => String(r.sound_id) === String(soundId));
+      if (!row) return;
+      activeSoundId = row.sound_id;
+      renderLibraryDetail(row);
+      renderLibraryTable();
+    };
+
+    window.predictRow = function(soundId) {
+      const row = currentRows.find((r) => String(r.sound_id) === String(soundId));
+      if (row) {
+        runPredictRow(row);
+      }
+    };
+
+    $("species-filter").innerHTML = `<option value="all">종 전체</option>` +
+      [...new Set((data.samples || []).map((s) => s.species_code))].sort()
+        .map((code) => `<option value="${code}">${esc(speciesNameMap[code] || code)} (${code})</option>`)
+        .join("");
+
+    $("library-species-filter").innerHTML = `<option value="all">종 전체</option>` +
+      [...new Set((data.collection.library_rows || []).map((r) => r.species_code))].sort()
+        .map((code) => `<option value="${code}">${esc(speciesNameMap[code] || code)} (${code})</option>`)
+        .join("");
+
+    $("species-filter").addEventListener("change", applySampleFilters);
+    $("region-filter").addEventListener("change", applySampleFilters);
+    $("recommendation-filter").addEventListener("change", applySampleFilters);
+    $("search-input").addEventListener("input", applySampleFilters);
+    $("library-species-filter").addEventListener("change", applyLibraryFilters);
+    $("library-recommendation-filter").addEventListener("change", applyLibraryFilters);
+    $("library-search-input").addEventListener("input", applyLibraryFilters);
+
+    renderHeader();
+    renderSpeciesTable();
+    renderTrainingPanels();
+    renderProof();
+    applySampleFilters();
+    applyLibraryFilters();
+    renderLog();
+  </script>
+</body>
+</html>

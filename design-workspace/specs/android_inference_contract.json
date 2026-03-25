@@ -1,0 +1,48 @@
+{
+  "contract_version": "v1",
+  "purpose": "Local on-device cicada inference result contract for Android MVP",
+  "input": {
+    "recording_id": "string",
+    "audio_duration_sec": "number",
+    "analysis_window_sec": 3.0,
+    "hop_sec": 1.5,
+    "device_model": "string",
+    "sample_rate_hz": 16000
+  },
+  "output": {
+    "presence_result": {
+      "label": "cicada_present | no_cicada | unclear",
+      "confidence": "number"
+    },
+    "species_result": {
+      "top_1": {
+        "label": "string",
+        "confidence": "number"
+      },
+      "top_3": [
+        {
+          "label": "string",
+          "confidence": "number"
+        }
+      ],
+      "allow_confident_display": "boolean"
+    },
+    "quality_result": {
+      "status": "good | noisy | too_short | clipped | unclear",
+      "reason": "string"
+    },
+    "window_predictions": [
+      {
+        "start_sec": "number",
+        "end_sec": "number",
+        "top_label": "string",
+        "top_probability": "number"
+      }
+    ],
+    "ux_guidance": {
+      "headline": "string",
+      "body": "string",
+      "retry_recommended": "boolean"
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "recording_id": "rec_20260317_001",
+  "audio_duration_sec": 5.0,
+  "analysis_window_sec": 3.0,
+  "hop_sec": 1.5,
+  "device_model": "SM-S918N",
+  "sample_rate_hz": 16000,
+  "presence_result": {
+    "label": "cicada_present",
+    "confidence": 0.93
+  },
+  "species_result": {
+    "top_1": {
+      "label": "chammaemi",
+      "confidence": 0.81
+    },
+    "top_3": [
+      {
+        "label": "chammaemi",
+        "confidence": 0.81
+      },
+      {
+        "label": "aemaemi",
+        "confidence": 0.11
+      },
+      {
+        "label": "malmaemi",
+        "confidence": 0.05
+      }
+    ],
+    "allow_confident_display": true
+  },
+  "quality_result": {
+    "status": "good",
+    "reason": "clear cicada band with stable amplitude"
+  },
+  "window_predictions": [
+    {
+      "start_sec": 0.0,
+      "end_sec": 3.0,
+      "top_label": "chammaemi",
+      "top_probability": 0.79
+    },
+    {
+      "start_sec": 1.5,
+      "end_sec": 4.5,
+      "top_label": "chammaemi",
+      "top_probability": 0.84
+    }
+  ],
+  "ux_guidance": {
+    "headline": "참매미일 가능성이 높아요",
+    "body": "주변 소음이 크지 않아 비교적 안정적으로 판단했습니다.",
+    "retry_recommended": false
+  }
+}

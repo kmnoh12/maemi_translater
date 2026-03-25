@@ -1,0 +1,2 @@
+session_id,recorded_at,location_name,latitude,longitude,device_model,distance_estimate_m,habitat_type,background_noise,weather_note,species_label,label_confidence,label_evidence,mixture_flag,acoustic_quality,notes,raw_audio_path,derived_audio_path,review_status,reviewer
+example_2026_07_15_001,2026-07-15T14:30:00+09:00,서울숲,37.5445,127.0374,Galaxy S24,3.0,urban_park,light_traffic;wind_low,hot_and_humid,chammaemi,confirmed,adult_photo,single_species,good,tree_trunk_visible,data-workspace/raw_audio/example.wav,,pending,

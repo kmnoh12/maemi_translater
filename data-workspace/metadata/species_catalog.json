@@ -1,0 +1,50 @@
+[
+  {
+    "species_code": "chammaemi",
+    "common_name_ko": "참매미",
+    "scientific_name": "Hyalessa maculaticollis",
+    "inat_query_name": "Hyalessa maculaticollis",
+    "inat_taxon_id": 359390,
+    "priority_tier": "mvp"
+  },
+  {
+    "species_code": "malmaemi",
+    "common_name_ko": "말매미",
+    "scientific_name": "Cryptotympana atrata",
+    "inat_query_name": "Cryptotympana atrata",
+    "inat_taxon_id": 319989,
+    "priority_tier": "mvp"
+  },
+  {
+    "species_code": "yujimaemi",
+    "common_name_ko": "유지매미",
+    "scientific_name": "Graptopsaltria nigrofuscata",
+    "inat_query_name": "Graptopsaltria nigrofuscata",
+    "inat_taxon_id": 325363,
+    "priority_tier": "mvp"
+  },
+  {
+    "species_code": "aemaemi",
+    "common_name_ko": "애매미",
+    "scientific_name": "Meimuna opalifera",
+    "inat_query_name": "Sinfonia opalifera",
+    "inat_taxon_id": 1650286,
+    "priority_tier": "expansion"
+  },
+  {
+    "species_code": "sseureummaemi",
+    "common_name_ko": "쓰름매미",
+    "scientific_name": "Meimuna mongolica",
+    "inat_query_name": "Streeyola mongolica",
+    "inat_taxon_id": 1650287,
+    "priority_tier": "expansion"
+  },
+  {
+    "species_code": "teolmaemi",
+    "common_name_ko": "털매미",
+    "scientific_name": "Tanna japonensis",
+    "inat_query_name": "Tanna japonensis",
+    "inat_taxon_id": 355995,
+    "priority_tier": "expansion"
+  }
+]

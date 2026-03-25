@@ -1,0 +1,27 @@
+--- COMBINED ---
+iNat:     1534 files ->  17295 windows
+YouTube:  1111 files ->  85724 windows
+iNat avg windows/file:    11.3
+YouTube avg windows/file: 77.2
+
+Per species (files / windows):
+  aemaemi             : iNat=521files/ 6084win  YT=194files/16728win
+  chammaemi           : iNat=345files/ 3936win  YT=223files/13782win
+  malmaemi            : iNat=240files/ 2700win  YT=244files/18097win
+  sseureummaemi       : iNat= 98files/ 1162win  YT= 91files/ 9960win
+  teolmaemi           : iNat= 81files/  901win  YT=164files/10355win
+  yujimaemi           : iNat=249files/ 2512win  YT=195files/16802win
+
+--- FILTERED ---
+iNat:     1534 files ->  17295 windows
+YouTube:   763 files ->  40724 windows
+iNat avg windows/file:    11.3
+YouTube avg windows/file: 53.4
+
+Per species (files / windows):
+  aemaemi             : iNat=521files/ 6084win  YT=138files/ 7403win
+  chammaemi           : iNat=345files/ 3936win  YT=162files/ 7112win
+  malmaemi            : iNat=240files/ 2700win  YT=174files/ 8443win
+  sseureummaemi       : iNat= 98files/ 1162win  YT= 54files/ 3517win
+  teolmaemi           : iNat= 81files/  901win  YT=118files/ 6526win
+  yujimaemi           : iNat=249files/ 2512win  YT=117files/ 7723win

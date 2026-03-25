@@ -1,0 +1,29 @@
+Train: 39121  Val: 10171  Test: 8497
+Best val acc: 0.4619
+Test accuracy: 0.4703
+Macro F1: 0.4272
+
+Per-class metrics:
+  aemaemi               p=0.481  r=0.701  f1=0.571  n=2257.0
+  chammaemi             p=0.578  r=0.594  f1=0.586  n=1600.0
+  malmaemi              p=0.638  r=0.325  f1=0.430  n=1568.0
+  sseureummaemi         p=0.279  r=0.327  f1=0.301  n=843.0
+  teolmaemi             p=0.398  r=0.268  f1=0.320  n=1128.0
+  yujimaemi             p=0.370  r=0.342  f1=0.355  n=1101.0
+
+Top confusion pairs:
+  teolmaemi            -> aemaemi               count=504
+  malmaemi             -> chammaemi             count=370
+  malmaemi             -> yujimaemi             count=357
+  sseureummaemi        -> aemaemi               count=330
+  yujimaemi            -> aemaemi               count=318
+  malmaemi             -> aemaemi               count=293
+  chammaemi            -> aemaemi               count=261
+  yujimaemi            -> sseureummaemi         count=258
+  sseureummaemi        -> teolmaemi             count=195
+  aemaemi              -> teolmaemi             count=179
+  chammaemi            -> sseureummaemi         count=178
+  aemaemi              -> sseureummaemi         count=150
+  teolmaemi            -> chammaemi             count=140
+  chammaemi            -> yujimaemi             count=139
+  aemaemi              -> chammaemi             count=116

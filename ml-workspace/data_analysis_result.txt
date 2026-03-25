@@ -1,0 +1,21 @@
+--- COMBINED ---
+Total: 102789, iNat: 17295, YouTube: 85724
+  aemaemi: total=22774 inat=6084 yt=16728
+  chammaemi: total=17718 inat=3936 yt=13782
+  malmaemi: total=20797 inat=2700 yt=18097
+  sseureummaemi: total=10930 inat=1162 yt=9960
+  teolmaemi: total=11256 inat=901 yt=10355
+  yujimaemi: total=19314 inat=2512 yt=16802
+--- FILTERED ---
+Total: 57789, iNat: 17295, YouTube: 40724
+  aemaemi: total=13449 inat=6084 yt=7403
+  chammaemi: total=11048 inat=3936 yt=7112
+  malmaemi: total=11143 inat=2700 yt=8443
+  sseureummaemi: total=4487 inat=1162 yt=3517
+  teolmaemi: total=7427 inat=901 yt=6526
+  yujimaemi: total=10235 inat=2512 yt=7723
+--- FILTERED SPLIT ---
+Total: 57789
+  test: 8497
+  train: 39121
+  val: 10171

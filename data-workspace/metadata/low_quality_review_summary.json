@@ -1,0 +1,109 @@
+﻿{
+  "youtube_flagged": 390,
+  "inat_flagged": 444,
+  "all_flagged": 834,
+  "youtube_buckets": {
+    "review": 92,
+    "rejected": 298
+  },
+  "inat_buckets": {
+    "review": 371,
+    "rejected": 73
+  },
+  "youtube_reasons": [
+    [
+      "blocked_term",
+      123
+    ],
+    [
+      "too_long",
+      80
+    ],
+    [
+      "strict_too_long",
+      55
+    ],
+    [
+      "foreign_species",
+      50
+    ],
+    [
+      "strict_need_own_alias",
+      25
+    ],
+    [
+      "too_short",
+      19
+    ],
+    [
+      "behavior_only",
+      18
+    ],
+    [
+      "strict_generic_song",
+      8
+    ],
+    [
+      "species_mismatch:yujimaemi",
+      8
+    ],
+    [
+      "strict_blocked_term",
+      4
+    ]
+  ],
+  "inat_reasons": [
+    [
+      "quality_grade_needs_id",
+      170
+    ],
+    [
+      "short_lt8s",
+      139
+    ],
+    [
+      "too_short_lt5s",
+      42
+    ],
+    [
+      "short_lt8s;quality_grade_needs_id",
+      30
+    ],
+    [
+      "long_gt60s",
+      28
+    ],
+    [
+      "too_short_lt5s;quality_grade_needs_id",
+      12
+    ],
+    [
+      "long_gt60s;very_long_gt90s",
+      8
+    ],
+    [
+      "quality_grade_casual",
+      5
+    ],
+    [
+      "quality_grade_casual;missing_place_guess",
+      4
+    ],
+    [
+      "long_gt60s;quality_grade_needs_id",
+      3
+    ],
+    [
+      "short_lt8s;quality_grade_casual",
+      1
+    ],
+    [
+      "quality_grade_needs_id;missing_place_guess",
+      1
+    ],
+    [
+      "missing_derived",
+      1
+    ]
+  ]
+}

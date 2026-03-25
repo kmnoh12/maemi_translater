@@ -1,0 +1,125 @@
+{
+  "product": "maemi_translater_android_mvp",
+  "version": "0.1",
+  "screens": [
+    {
+      "id": "home",
+      "title": "매미 소리로 종 추정하기",
+      "purpose": "녹음 시작 전 진입점과 기대치를 제공한다.",
+      "inputs": [],
+      "outputs": [
+        "start_recording"
+      ],
+      "states": [
+        "mic_permission_missing",
+        "ready"
+      ],
+      "primary_action": "녹음 시작"
+    },
+    {
+      "id": "recording",
+      "title": "녹음 중",
+      "purpose": "5초 녹음 진행 상태를 보여준다.",
+      "inputs": [
+        "mic_stream"
+      ],
+      "outputs": [
+        "recording_complete",
+        "recording_cancelled"
+      ],
+      "states": [
+        "recording_active",
+        "recording_complete",
+        "recording_cancelled"
+      ],
+      "primary_action": "취소"
+    },
+    {
+      "id": "quality_check",
+      "title": "음질 점검",
+      "purpose": "분석 전에 음질과 매미 소리 존재 여부를 점검한다.",
+      "inputs": [
+        "raw_audio",
+        "quality_signal",
+        "cicada_present_score"
+      ],
+      "outputs": [
+        "analyze",
+        "retry_recording"
+      ],
+      "states": [
+        "quality_pass",
+        "quality_retry",
+        "no_cicada"
+      ],
+      "primary_action": "분석 시작"
+    },
+    {
+      "id": "analyzing",
+      "title": "분석 중",
+      "purpose": "특징 추출과 분류 수행 중 대기 상태를 보여준다.",
+      "inputs": [
+        "normalized_audio"
+      ],
+      "outputs": [
+        "classification_result"
+      ],
+      "states": [
+        "loading"
+      ],
+      "primary_action": null
+    },
+    {
+      "id": "result_high_confidence",
+      "title": "결과",
+      "purpose": "확신도 높은 결과를 중심으로 보여준다.",
+      "inputs": [
+        "top_label",
+        "top_probability",
+        "candidate_labels"
+      ],
+      "outputs": [
+        "view_species_detail",
+        "retry_recording"
+      ],
+      "states": [
+        "result_high"
+      ],
+      "primary_action": "종 설명 보기"
+    },
+    {
+      "id": "result_low_confidence",
+      "title": "확신 낮음",
+      "purpose": "불확실한 결과를 보류하고 재녹음을 유도한다.",
+      "inputs": [
+        "candidate_labels",
+        "low_confidence",
+        "mixture_possible"
+      ],
+      "outputs": [
+        "retry_recording",
+        "view_candidates"
+      ],
+      "states": [
+        "result_low"
+      ],
+      "primary_action": "다시 녹음"
+    },
+    {
+      "id": "species_detail",
+      "title": "종 설명",
+      "purpose": "종 특징과 유사 종 차이를 제공한다.",
+      "inputs": [
+        "species_label"
+      ],
+      "outputs": [
+        "retry_recording",
+        "go_home"
+      ],
+      "states": [
+        "detail_loaded"
+      ],
+      "primary_action": "새로 녹음하기"
+    }
+  ]
+}

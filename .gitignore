@@ -1,0 +1,24 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+node_modules/
+dist/
+build/
+
+# Local audio assets are expected to be large and mutable.
+data-workspace/raw_audio/*
+data-workspace/derived_audio/*
+!data-workspace/raw_audio/.gitkeep
+!data-workspace/derived_audio/.gitkeep
+
+# Generated experiment outputs
+ml-workspace/experiments/*
+ml-workspace/reports/*
+!ml-workspace/experiments/.gitkeep
+!ml-workspace/reports/.gitkeep
+
+# OS noise
+Thumbs.db
+.DS_Store

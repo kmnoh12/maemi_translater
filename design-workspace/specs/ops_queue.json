@@ -1,0 +1,49 @@
+{
+  "version": "v1",
+  "queues": [
+    {
+      "id": "dashboard_refresh",
+      "title": "대시보드 최신화",
+      "priority": 1,
+      "tasks": [
+        "inat_full_inventory.csv 갱신",
+        "dataset_health_report 생성",
+        "prediction_cache 생성",
+        "preview_clips 생성",
+        "dashboard payload 갱신"
+      ]
+    },
+    {
+      "id": "no_cicada_gate",
+      "title": "매미 없음 게이트 준비",
+      "priority": 2,
+      "tasks": [
+        "no_cicada 원본 수집",
+        "manifest 작성",
+        "정규화 변환",
+        "presence label 실험"
+      ]
+    },
+    {
+      "id": "korea_validation",
+      "title": "한국 현장 검증 강화",
+      "priority": 3,
+      "tasks": [
+        "한국 샘플 증가",
+        "한국-only 점검셋 구성",
+        "혼동쌍 분석",
+        "재녹음 UX 기준 정의"
+      ]
+    },
+    {
+      "id": "android_handoff",
+      "title": "안드로이드 연결 준비",
+      "priority": 4,
+      "tasks": [
+        "결과 계약서 고정",
+        "앱 표시용 JSON 예시 정리",
+        "온디바이스 포맷 변환 후보 검토"
+      ]
+    }
+  ]
+}

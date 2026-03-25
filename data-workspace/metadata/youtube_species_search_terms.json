@@ -1,0 +1,129 @@
+{
+  "_comment": "YouTube cicada search expansion config for build_youtube_manifest.py. Keep the 6 target species only. Add new aliases here, and the script will combine them with multilingual sound suffixes automatically.",
+  "_languages": [
+    "ko",
+    "en",
+    "ja",
+    "zh-CN",
+    "zh-TW"
+  ],
+  "search_suffixes": [
+    "\uC6B8\uC74C\uC18C\uB9AC",
+    "\uC18C\uB9AC",
+    "\uB9E4\uBBF8 \uC18C\uB9AC",
+    "\uB9E4\uBBF8 \uC6B0\uB294\uC18C\uB9AC",
+    "sound",
+    "cicada sound",
+    "cicada song",
+    "cicada call",
+    "calling",
+    "chirping",
+    "\u9CF4\u304D\u58F0",
+    "\u58F0",
+    "\u97F3",
+    "\u53EB\u58F0",
+    "\u9E23\u53EB",
+    "\u9E23\u58F0",
+    "\u53EB\u8072",
+    "\u9CF4\u8072"
+  ],
+  "species": {
+    "yujimaemi": [
+      "\uC720\uC9C0\uB9E4\uBBF8",
+      "\u30A2\u30D6\u30E9\u30BC\u30DF",
+      "aburazemi",
+      "\u6CB9\u8749",
+      "\u6CB9\u87FB",
+      "Graptopsaltria nigrofuscata"
+    ],
+    "chammaemi": [
+      "\uCC38\uB9E4\uBBF8",
+      "\u30DF\u30F3\u30DF\u30F3\u30BC\u30DF",
+      "minminzemi",
+      "\u9E23\u9E23\u8749",
+      "\u9CF4\u9CF4\u87FB",
+      "Hyalessa maculaticollis",
+      "minmin cicada"
+    ],
+    "malmaemi": [
+      "\uB9D0\uB9E4\uBBF8",
+      "\u30AF\u30DE\u30BC\u30DF",
+      "kumazemi",
+      "\u718A\u8749",
+      "\u718A\u87FB",
+      "\u7D05\u8108\u718A\u87FB",
+      "Cryptotympana atrata"
+    ],
+    "aemaemi": [
+      "\uC560\uB9E4\uBBF8",
+      "\u30C4\u30AF\u30C4\u30AF\u30DC\u30A6\u30B7",
+      "tsukutsuku boushi",
+      "\u5BD2\u8749",
+      "\u5BD2\u87FB",
+      "Meimuna opalifera",
+      "Walker's cicada"
+    ],
+    "sseureummaemi": [
+      "\uC4F0\uB984\uB9E4\uBBF8",
+      "\u8499\u53E4\u5BD2\u8749",
+      "\u8499\u53E4\u5BD2\u87FB",
+      "Meimuna mongolica",
+      "Mongolian cicada"
+    ],
+    "teolmaemi": [
+      "\uD138\uB9E4\uBBF8",
+      "\u30D2\u30B0\u30E9\u30B7",
+      "higurashi",
+      "higurashi cicada",
+      "\u66AE\u8749",
+      "\u66AE\u87FB",
+      "Tanna japonensis"
+    ]
+  },
+  "direct_queries": {
+    "yujimaemi": [
+      "\uC720\uC9C0\uB9E4\uBBF8 \uC6B8\uC74C\uC18C\uB9AC",
+      "\u30A2\u30D6\u30E9\u30BC\u30DF \u9CF4\u304D\u58F0",
+      "\u6CB9\u8749 \u53EB\u58F0",
+      "\u6CB9\u87FB \u53EB\u8072",
+      "Graptopsaltria nigrofuscata sound"
+    ],
+    "chammaemi": [
+      "\uCC38\uB9E4\uBBF8 \uC6B8\uC74C\uC18C\uB9AC",
+      "\u30DF\u30F3\u30DF\u30F3\u30BC\u30DF \u9CF4\u304D\u58F0",
+      "\u9E23\u9E23\u8749 \u53EB\u58F0",
+      "\u9CF4\u9CF4\u87FB \u53EB\u8072",
+      "Hyalessa maculaticollis sound"
+    ],
+    "malmaemi": [
+      "\uB9D0\uB9E4\uBBF8 \uC6B8\uC74C\uC18C\uB9AC",
+      "\u30AF\u30DE\u30BC\u30DF \u9CF4\u304D\u58F0",
+      "\u718A\u8749 \u53EB\u58F0",
+      "\u718A\u87FB \u53EB\u8072",
+      "Cryptotympana atrata sound"
+    ],
+    "aemaemi": [
+      "\uC560\uB9E4\uBBF8 \uC6B8\uC74C\uC18C\uB9AC",
+      "\u30C4\u30AF\u30C4\u30AF\u30DC\u30A6\u30B7 \u9CF4\u304D\u58F0",
+      "\u5BD2\u8749 \u53EB\u58F0",
+      "\u5BD2\u87FB \u53EB\u8072",
+      "Meimuna opalifera sound"
+    ],
+    "sseureummaemi": [
+      "\uC4F0\uB984\uB9E4\uBBF8 \uC6B8\uC74C\uC18C\uB9AC",
+      "\u8499\u53E4\u5BD2\u8749 \u53EB\u58F0",
+      "\u8499\u53E4\u5BD2\u87FB \u53EB\u8072",
+      "Meimuna mongolica sound",
+      "Mongolian cicada call"
+    ],
+    "teolmaemi": [
+      "\uD138\uB9E4\uBBF8 \uC6B8\uC74C\uC18C\uB9AC",
+      "\u30D2\u30B0\u30E9\u30B7 \u9CF4\u304D\u58F0",
+      "\u30D2\u30B0\u30E9\u30B7 \u58F0",
+      "\u66AE\u8749 \u53EB\u58F0",
+      "\u66AE\u87FB \u53EB\u8072",
+      "Tanna japonensis sound",
+      "evening cicada sound"
+    ]
+  }
+}

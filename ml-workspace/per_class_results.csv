@@ -1,0 +1,7 @@
+class,precision,recall,f1,support
+aemaemi,0.4813,0.7014,0.5709,2257.0
+chammaemi,0.5782,0.5938,0.5859,1600.0
+malmaemi,0.6378,0.3246,0.4303,1568.0
+sseureummaemi,0.2785,0.3274,0.3010,843.0
+teolmaemi,0.3979,0.2677,0.3201,1128.0
+yujimaemi,0.3697,0.3415,0.3551,1101.0
