@@ -106,15 +106,15 @@ def main() -> None:
 
             writer.writerow(
                 {
-                    "feature_index": row["feature_index"],
+                    "feature_index": row.get("feature_index", str(idx - 1)),
                     "window_id": row["window_id"],
                     "species_code": row["species_code"],
-                    "common_name_ko": row["common_name_ko"],
-                    "scientific_name": row["scientific_name"],
+                    "common_name_ko": row.get("common_name_ko", ""),
+                    "scientific_name": row.get("scientific_name", ""),
                     "observation_id": row["observation_id"],
                     "sound_id": row["sound_id"],
-                    "license_code": row["license_code"],
-                    "quality_grade": row["quality_grade"],
+                    "license_code": row.get("license_code", ""),
+                    "quality_grade": row.get("quality_grade", ""),
                     "audio_path": row["audio_path"],
                     "start_sec": row["start_sec"],
                     "end_sec": row["end_sec"],
