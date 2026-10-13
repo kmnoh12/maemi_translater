@@ -129,3 +129,27 @@ powershell -ExecutionPolicy Bypass -File .\scripts\normalize-public-seed-audio.p
 ## 라이선스
 
 아직 라이선스가 없습니다. 외부 배포나 협업을 본격화하기 전에 라이선스를 추가하는 것을 권장합니다.
+
+
+## SQLite 예측 기록 (로컬 대시보드)
+
+로컬 대시보드에서 음원을 분석하면 Python 표준 라이브러리 `sqlite3`로 예측 기록을 저장합니다. 서버는 별도 DB 서비스, API 키, 로그인 없이 동작합니다.
+
+- 저장 시점: `/api/predict` (업로드), `/api/predict-path` (라이브러리)의 **성공한 추론**만 기록
+- 저장 항목: UTC 시각, 입력 방식, 음원 **파일명**, 예측 종, 신뢰도, 판정 상태, 길이, 모델명
+- 기본 DB 경로: `~/.maemi_translater/prediction_history.sqlite3` (프로젝트가 정적으로 제공하는 경로 밖)
+- 변경 방법: 서버 실행 전 `MAEMI_DB_PATH` 환경 변수 지정
+- 조회: 브라우저에서 `http://127.0.0.1:8765/api/history?limit=20` (최근 순, 1~100건)
+- 예측 API의 응답에는 저장 성공 시 `history_saved: true`, `history_id`가 추가됩니다.
+
+음원 바이너리·원본 절대 경로는 DB에 저장하지 않습니다. DB 기록 실패 시 추론 결과는 정상 반환하고 서버 로그에 오류를 기록합니다.
+
+```powershell
+# 프로젝트 폴더에서 서버 실행 (학습 모델 및 의존성 설치 후)
+.\.venv\Scripts\python.exe .\scripts\run_dashboard_app.py
+
+# SQLite 저장·조회 및 HTTP API 테스트 (추론 모델 불필요)
+py -3.12 -m unittest discover -s tests -v
+```
+
+테이블 정의와 매개변수 바인딩 INSERT/SELECT는 [`scripts/prediction_history.py`](scripts/prediction_history.py)에 있습니다. 이 저장 기능은 **PC 로컬 대시보드**에 적용되며, 아직 안드로이드 앱에 연동한 것은 아닙니다.
