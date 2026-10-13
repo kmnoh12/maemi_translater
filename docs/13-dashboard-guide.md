@@ -35,3 +35,12 @@
 - The full library browser supports playback and instant re-prediction for selected rows.
 - If a row has no spectrogram image, it means that sample is not in the representative sample set yet.
 - Upload prediction uses the current baseline model at `ml-workspace/artifacts/inat_full_feature_model.joblib`.
+
+
+## Prediction history (SQLite)
+
+- Local dashboard inference endpoints `/api/predict` and `/api/predict-path` insert one row on success.
+- `GET /api/history?limit=20`: newest-first results (`limit` 1–100; invalid values return HTTP 400).
+- Stores only audio basenames and inference metadata, never recordings or absolute input paths.
+- Default local DB path is `~/.maemi_translater/prediction_history.sqlite3`, outside the static web root. Set `MAEMI_DB_PATH` to override it.
+- Check DB and API behavior with `py -3.12 -m unittest discover -s tests -v` without loading the trained model.

@@ -132,3 +132,15 @@ This repository is an active research-and-build workspace. It already contains a
 ## License
 
 No license has been added yet. Add one before distributing or accepting outside contributions.
+
+
+## SQLite prediction history (local dashboard)
+
+The local dashboard uses Python's built-in `sqlite3` to persist **successful** inference results from `/api/predict` (uploads) and `/api/predict-path` (library files). No external database server or credentials are needed. Each record includes UTC time, source type, audio **basename**, top predicted species, confidence, decision status, duration, and source model; it does **not** include audio bytes or absolute source paths.
+
+- Default database: `~/.maemi_translater/prediction_history.sqlite3`, outside the dashboard's served directory. Override using the `MAEMI_DB_PATH` environment variable before starting the server.
+- Query the latest results at `http://127.0.0.1:8765/api/history?limit=20` (`limit`: 1–100, newest first).
+- Successful prediction responses include `history_saved: true` and `history_id`. If SQLite is unavailable, the inference response is preserved and the database error is logged.
+- Run database and HTTP integration tests without a model: `py -3.12 -m unittest discover -s tests -v`.
+
+See [`scripts/prediction_history.py`](scripts/prediction_history.py) for the schema and parameterized SQL. This feature applies to the **desktop-local dashboard**, not the planned Android app.

@@ -2,14 +2,16 @@ from __future__ import annotations
 
 import cgi
 import json
+import logging
 import mimetypes
 import os
+import sqlite3
 import sys
 import tempfile
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT = SCRIPT_DIR.parent
@@ -17,12 +19,14 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 from predict_audio_with_baseline import predict_audio
+from prediction_history import DEFAULT_DB_PATH, initialize_database, list_predictions, save_prediction
 
 
 HOST = "127.0.0.1"
 PORT = 8765
 MODEL_PATH = ROOT / "ml-workspace" / "artifacts" / "cnn_experiment_top200_gpu_model.pt"
 UPLOAD_DIR = ROOT / "dashboard" / "uploads"
+DB_PATH = Path(os.environ.get("MAEMI_DB_PATH", str(DEFAULT_DB_PATH))).expanduser()
 
 
 class DashboardHandler(SimpleHTTPRequestHandler):
@@ -37,6 +41,9 @@ class DashboardHandler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         if parsed.path == "/api/health":
             self._send_json({"status": "ok"})
+            return
+        if parsed.path == "/api/history":
+            self._handle_history(parsed.query)
             return
         if parsed.path == "/api/latest-log":
             self._handle_latest_log()
@@ -89,6 +96,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
             result = predict_audio(tmp_path, MODEL_PATH)
             result["uploaded_name"] = filename
             result["uploaded_temp_path"] = str(tmp_path.relative_to(ROOT)).replace("\\", "/")
+            self._record_prediction(result, source_type="upload", audio_name=filename)
             self._send_json(result)
         except Exception as exc:  # noqa: BLE001
             self._send_json({"error": str(exc), "uploaded_name": filename}, status=HTTPStatus.BAD_REQUEST)
@@ -135,9 +143,36 @@ class DashboardHandler(SimpleHTTPRequestHandler):
         try:
             result = predict_audio(requested, MODEL_PATH)
             result["requested_audio_path"] = str(requested.relative_to(ROOT)).replace("\\", "/")
+            self._record_prediction(result, source_type="library", audio_name=requested.name)
             self._send_json(result)
         except Exception as exc:  # noqa: BLE001
             self._send_json({"error": str(exc)}, status=HTTPStatus.BAD_REQUEST)
+
+    def _record_prediction(self, result: dict[str, object], *, source_type: str, audio_name: str) -> None:
+        # A history write failure must not discard an otherwise successful inference.
+        try:
+            result["history_id"] = save_prediction(
+                result, source_type=source_type, audio_name=audio_name, db_path=DB_PATH
+            )
+            result["history_saved"] = True
+        except (sqlite3.Error, OSError):
+            logging.exception("Could not save the prediction to SQLite")
+            result["history_saved"] = False
+
+    def _handle_history(self, query: str) -> None:
+        try:
+            limit = int(parse_qs(query).get("limit", ["20"])[0])
+            items = list_predictions(DB_PATH, limit=limit)
+        except ValueError:
+            self._send_json({"error": "limit must be an integer from 1 to 100"},
+                            status=HTTPStatus.BAD_REQUEST)
+            return
+        except (sqlite3.Error, OSError):
+            logging.exception("Could not read SQLite prediction history")
+            self._send_json({"error": "prediction history unavailable"},
+                            status=HTTPStatus.INTERNAL_SERVER_ERROR)
+            return
+        self._send_json({"count": len(items), "items": items})
 
     def _send_json(self, payload: dict[str, object], status: HTTPStatus = HTTPStatus.OK) -> None:
         body = json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
@@ -171,9 +206,11 @@ class DashboardHandler(SimpleHTTPRequestHandler):
 
 
 def main() -> None:
+    initialize_database(DB_PATH)
     server = ThreadingHTTPServer((HOST, PORT), DashboardHandler)
     print(f"Dashboard app running at http://{HOST}:{PORT}/dashboard/index.html")
     print(f"Serving project root: {ROOT}")
+    print(f"Prediction history database: {DB_PATH}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
